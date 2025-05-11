@@ -1,0 +1,234 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build-editor-release",
+            "type": "shell",
+            "command": "scons",
+            "args": [
+                "-j$(nproc)",
+                "platform=linuxbsd",
+                "target=editor",
+                "production=yes",
+                "optimize=speed",
+                "compiledb=yes"
+            ],
+            "group": "build",
+            "problemMatcher": {
+                "owner": "cpp",
+                "fileLocation": ["relative", "${workspaceFolder}"],
+                "pattern": {
+                    "regexp": "^(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
+                    "file": 1,
+                    "line": 2,
+                    "column": 3,
+                    "severity": 4,
+                    "message": 5
+                }
+            }
+        },
+        {
+            "label": "build-editor-debug",
+            "type": "shell",
+            "command": "scons",
+            "args": [
+                "-j$(nproc)",
+                "platform=linuxbsd",
+                "target=editor",
+                "dev_build=yes",
+                "debug_symbols=yes",
+                "compiledb=yes"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": {
+                "owner": "cpp",
+                "fileLocation": ["relative", "${workspaceFolder}"],
+                "pattern": {
+                    "regexp": "^(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
+                    "file": 1,
+                    "line": 2,
+                    "column": 3,
+                    "severity": 4,
+                    "message": 5
+                }
+            }
+        },
+        {
+            "label": "build-editor-version-debug",
+            "type": "shell",
+            "command": "${workspaceFolder}/.vscode/build_with_tag.sh",
+            "args": [],
+            "group": "build",
+            "problemMatcher": {
+                "owner": "cpp",
+                "fileLocation": ["relative", "${workspaceFolder}"],
+                "pattern": {
+                    "regexp": "^(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
+                    "file": 1,
+                    "line": 2,
+                    "column": 3,
+                    "severity": 4,
+                    "message": 5
+                }
+            }
+        },
+        {
+            "label": "build-editor-debug-csharp",
+            "type": "shell",
+            "command": "scons",
+            "args": [
+                "-j$(nproc)",
+                "platform=linuxbsd",
+                "target=editor",
+                "module_mono_enabled=yes",
+                "dev_build=yes",
+                "debug_symbols=yes",
+                "compiledb=yes"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            },
+            "problemMatcher": {
+                "owner": "cpp",
+                "fileLocation": ["relative", "${workspaceFolder}"],
+                "pattern": {
+                    "regexp": "^(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
+                    "file": 1,
+                    "line": 2,
+                    "column": 3,
+                    "severity": 4,
+                    "message": 5
+                }
+            }
+        },
+        {
+            "label": "build-editor-debug-csharp-version",
+            "type": "shell",
+            "command": "${workspaceFolder}/.vscode/build_with_tag.sh",
+            "args": ["module_mono_enabled=yes"],
+            "group": "build",
+            "problemMatcher": {
+                "owner": "cpp",
+                "fileLocation": ["relative", "${workspaceFolder}"],
+                "pattern": {
+                    "regexp": "^(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
+                    "file": 1,
+                    "line": 2,
+                    "column": 3,
+                    "severity": 4,
+                    "message": 5
+                }
+            }
+        },
+        {
+            "label": "build-editor-wasm-debug",
+            "type": "shell",
+            "command": "scons",
+            "options": {
+                "shell": {
+                    "executable": "/bin/bash",
+                    "args": ["-c"]
+                }
+            },
+            "args": [
+                "platform=web",
+                "target=editor",
+                "use_lto=no",
+                "debug_symbols=yes",
+                "optimize=debug",
+                "dev_build=yes",
+                "javascript_eval=yes",
+                "-j$(nproc)"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            },
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "generate-mono-glue",
+            "type": "shell",
+            "command": "./bin/godot.linuxbsd.editor.dev.x86_64.mono",
+            "args": [
+                "--headless",
+                "--generate-mono-glue",
+                "modules/mono/glue"
+            ],
+            "group": "none",
+            "problemMatcher": []
+        },
+        {
+            "label": "build-mono-assemblies",
+            "type": "shell",
+            "command": "python3",
+            "args": [
+                "modules/mono/build_scripts/build_assemblies.py",
+                "--godot-output-dir",
+                "bin"
+            ],
+            "group": "none",
+            "problemMatcher": []
+        },
+        {
+            "label": "build-editor-debug-csharp-all",
+            "dependsOn": [
+                "generate-mono-glue",
+                "build-mono-assemblies",
+                "build-editor-debug-csharp"
+            ],
+            "dependsOrder": "sequence",
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            }
+        },
+        {
+            "label": "build-editor-release-csharp",
+            "type": "shell",
+            "command": "scons",
+            "args": [
+                "-j$(nproc)",
+                "platform=linuxbsd",
+                "target=editor",
+                "module_mono_enabled=yes",
+                "production=yes",
+                "optimize=speed",
+                "compiledb=yes"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            },
+            "problemMatcher": {
+                "owner": "cpp",
+                "fileLocation": ["relative", "${workspaceFolder}"],
+                "pattern": {
+                    "regexp": "^(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
+                    "file": 1,
+                    "line": 2,
+                    "column": 3,
+                    "severity": 4,
+                    "message": 5
+                }
+            }
+        },
+        {
+            "label": "build-editor-release-csharp-all",
+            "dependsOn": [
+                "generate-mono-glue",
+                "build-mono-assemblies",
+                "build-editor-release-csharp"
+            ],
+            "dependsOrder": "sequence",
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            }
+        }
+    ]
+}

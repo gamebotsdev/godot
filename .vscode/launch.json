@@ -1,0 +1,17 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug Godot Editor",
+            "program": "${workspaceFolder}/bin/godot.linuxbsd.editor.dev.x86_64",
+            "args": [],
+            "cwd": "${workspaceFolder}",
+            "preLaunchTask": "build-editor-debug",
+            "initCommands": [
+                "settings set target.disable-aslr false"
+            ]
+        }
+    ]
+}
